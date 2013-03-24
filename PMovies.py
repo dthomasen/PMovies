@@ -50,11 +50,11 @@ for r,d,f in os.walk(fromDir):
            sampleFiles.append(os.path.join(r,files))
         elif files.endswith(".mp4"):
            mp4Files.append(os.path.join(r,files))
-        if files.endswith(".mkv"):
+        elif files.endswith(".mkv"):
            mkvFiles.append(os.path.join(r,files))
-        if files.endswith(".avi"):
+        elif files.endswith(".avi"):
            aviFiles.append(os.path.join(r,files))
-        if files.endswith(".wmv"):
+        elif files.endswith(".wmv"):
            wmvFiles.append(os.path.join(r,files))
 
 print("Found "+str(len(mp4Files))+" mp4 file(s).")
@@ -101,6 +101,16 @@ if len(aviFiles) != 0:
 if len(wmvFiles) != 0:
     print("Moving wmv files...")
     for file in wmvFiles:
+        try:
+            print(" -Moving "+ntpath.basename(file)+"...")
+            shutil.copy2(file,toDir)
+            dirsToRemove.append(findRelativeFolder(rootDir,file))
+            print(" -Done...")
+        except IOError:
+            print("File "+file+" already exists")
+if moveSamples is "Yes":
+    print("Moving sample files...")
+    for file in sampleFiles:
         try:
             print(" -Moving "+ntpath.basename(file)+"...")
             shutil.copy2(file,toDir)
