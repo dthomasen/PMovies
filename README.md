@@ -11,3 +11,8 @@ This phase will move the files found in step 1 to the location specified in the 
 
 <h3>3. Delete original folders (If specified in properties)</h3>
 Lastly the script will recursively delete the original folder for the files (Relative to the basedir)
+
+<h2>Prerequisites</h2>
+<ul>
+<li>Python 3 or greater</li>
+</ul>
