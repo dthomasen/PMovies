@@ -24,7 +24,7 @@ def findRelativeFolder(rootDir, file):
     try:
         return relativeDir+"\\"+folderName
     except UnboundLocalError:
-        return relativeDir+"\\"+file #If file is not in any folder
+        return relativeDir+"\\"+ntpath.basename(file) #If file is not in any folder
 
 #Remove directory recursively - Doesn't fail if directory not found
 def removeDir(path):
