@@ -21,7 +21,10 @@ def findRelativeFolder(rootDir, file):
         relativeDirTuple = ntpath.split(relativeDir)
         relativeDir = relativeDirTuple[0]
         folderName = relativeDirTuple[1]
-    return relativeDir+"\\"+folderName
+    try:
+        return relativeDir+"\\"+folderName
+    except UnboundLocalError:
+        return relativeDir+"\\"+file #If file is not in any folder
 
 #Remove directory recursively - Doesn't fail if directory not found
 def removeDir(path):
