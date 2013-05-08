@@ -17,14 +17,18 @@ import ntpath
 #Used for removing files directory after copy
 def findRelativeFolder(rootDir, file):
     relativeDir = ntpath.split(file)[0]
-    while not relativeDir.endswith(rootDir):
-        relativeDirTuple = ntpath.split(relativeDir)
-        relativeDir = relativeDirTuple[0]
-        folderName = relativeDirTuple[1]
-    try:
-        return relativeDir+"\\"+folderName
-    except UnboundLocalError:
-        return relativeDir+"\\"+ntpath.basename(file) #If file is not in any folder
+
+    if(relativeDir.endswith(rootDir)):
+        return relativeDir+"\\"+ntpath.basename(file)
+    else:
+        while not relativeDir.endswith(rootDir):
+            relativeDirTuple = ntpath.split(relativeDir)
+            relativeDir = relativeDirTuple[0]
+            folderName = relativeDirTuple[1]
+        try:
+            return relativeDir+"\\"+folderName
+        except UnboundLocalError:
+            return relativeDir+"\\"+ntpath.basename(file) #If file is not in any folder
 
 #Remove directory recursively - Doesn't fail if directory not found
 def removeDir(path):
@@ -37,10 +41,12 @@ config = configparser.ConfigParser()
 print ("\nProperties: "+ config.read(scriptDir+'\\PMovies.properties')[0])
 fromDir = config.get("Paths","OriginalDir")
 toDir = config.get("Paths","MoveTo")
+movieDir = config.get("Paths","MovieDir")
 rootDir = ntpath.split(fromDir)[1]
 moveSamples = config.get("Config","MoveSamples")
 mp4Files = []
 mkvFiles = []
+movieFiles = []
 aviFiles = []
 wmvFiles = []
 sampleFiles = []
@@ -51,6 +57,8 @@ for r,d,f in os.walk(fromDir):
     for files in f:
         if "sample" in files.lower():
            sampleFiles.append(os.path.join(r,files))
+        elif (int(os.path.getsize(files)) > 2000000000):
+            movieFiles.append(os.path.join(r,files))
         elif files.endswith(".mp4"):
            mp4Files.append(os.path.join(r,files))
         elif files.endswith(".mkv"):
@@ -64,6 +72,7 @@ print("Found "+str(len(mp4Files))+" mp4 file(s).")
 print("Found "+str(len(mkvFiles))+" mkv file(s).")
 print("Found "+str(len(aviFiles))+" avi file(s).")
 print("Found "+str(len(wmvFiles))+" wmv file(s).")
+print("Found "+str(len(movieFiles))+" movie files")
 
 if moveSamples is "Yes":
     print("Found "+str(len(sampleFiles))+" sample file(s)")
@@ -107,6 +116,16 @@ if len(wmvFiles) != 0:
         try:
             print(" -Moving "+ntpath.basename(file)+"...")
             shutil.copy2(file,toDir)
+            dirsToRemove.append(findRelativeFolder(rootDir,file))
+            print(" -Done...")
+        except IOError:
+            print("File "+file+" already exists")
+if len(movieFiles) != 0:
+    print("Moving movie files...")
+    for file in movieFiles:
+        try:
+            print(" -Moving "+ntpath.basename(file)+"...")
+            shutil.copy2(file,movieDir)
             dirsToRemove.append(findRelativeFolder(rootDir,file))
             print(" -Done...")
         except IOError:
