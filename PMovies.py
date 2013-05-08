@@ -57,26 +57,16 @@ for r,d,f in os.walk(fromDir):
     for files in f:
         if "sample" in files.lower():
            sampleFiles.append(os.path.join(r,files))
+        elif int(os.path.getsize(os.path.join(r,files))) > 2000000000:
+            movieFiles.append(os.path.join(r,files))
         elif files.endswith(".mp4"):
-           if int(os.path.getsize(files)) > 2000000000:
-                movieFiles.append(os.path.join(r,files))
-           else:
-                mp4Files.append(os.path.join(r,files))
+           mp4Files.append(os.path.join(r,files))
         elif files.endswith(".mkv"):
-            if int(os.path.getsize(files)) > 2000000000:
-                movieFiles.append(os.path.join(r,files))
-            else:
-               mkvFiles.append(os.path.join(r,files))
+           mkvFiles.append(os.path.join(r,files))
         elif files.endswith(".avi"):
-            if int(os.path.getsize(files)) > 2000000000:
-                movieFiles.append(os.path.join(r,files))
-            else:
-                aviFiles.append(os.path.join(r,files))
+           aviFiles.append(os.path.join(r,files))
         elif files.endswith(".wmv"):
-            if int(os.path.getsize(files)) > 2000000000:
-                movieFiles.append(os.path.join(r,files))
-            else:
-                wmvFiles.append(os.path.join(r,files))
+           wmvFiles.append(os.path.join(r,files))
 
 print("Found "+str(len(mp4Files))+" mp4 file(s).")
 print("Found "+str(len(mkvFiles))+" mkv file(s).")
